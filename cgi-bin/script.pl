@@ -5,17 +5,7 @@ use CGI;
 
 my $q=CGI->new();
 my $expresion=$q->param("expresion");
-my $resultado;
-
-if($expresion=~/([0-9]+)([\+\-\*\/])([0-9]+)/){
-  my $numero1=$1;
-  my $operador=$2;
-  my $numero2=$3;
-  $resultado=operacion($numero1,$operador,$numero2);
-}
-else{
-  $resultado="No ingreso una expresion valida";
-}
+my $resultado=evaluarExpresion($expresion);
 
 print $q->header("text/html");
 print <<BLOCK;
@@ -35,6 +25,32 @@ print <<BLOCK;
   </body>
 </html>
 BLOCK
+
+sub evaluarExpresion{
+  my $expresion=$_[0];
+
+  while (not $expresion=~/^[0-9]+(\.[0-9]+)?$/){
+    $expresion=evaluarOperacion($expresion);
+  }
+
+  return $expresion;
+}
+
+sub evaluarOperacion{
+  my $expresion=$_[0];
+  my $resultado;
+  
+  if ($expresion=~/([0-9]+(\.[0-9]+)?)([\*\/])([0-9]+(\.[0-9]+)?)/){
+    $resultado=operacion($1,$3,$4);
+    $expresion=~s/([0-9]+(\.[0-9]+)?)([\*\/])([0-9]+(\.[0-9]+)?)/$resultado/;    
+  } 
+  elsif ($expresion=~/([0-9]+(\.[0-9]+)?)([\+\-])([0-9]+(\.[0-9]+)?)/){
+    $resultado=operacion($1,$3,$4);
+    $expresion=~s/([0-9]+(\.[0-9]+)?)([\+\-])([0-9]+(\.[0-9]+)?)/$resultado/;    
+  }
+  return $expresion;
+}
+
 
 sub operacion{
   my $numero1=$_[0];
