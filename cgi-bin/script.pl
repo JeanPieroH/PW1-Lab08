@@ -29,7 +29,7 @@ BLOCK
 sub evaluarExpresion{
   my $expresion=$_[0];
 
-  while (not $expresion=~/^[0-9]+(\.[0-9]+)?$/){
+  while (not $expresion=~/^[0-9]+(\.[0-9]+)?$/ and not $expresion=~/No se puede dividir por 0/){
     $expresion=evaluarOperacion($expresion);
   }
 
@@ -48,6 +48,7 @@ sub evaluarOperacion{
     $resultado=operacion($1,$3,$4);
     $expresion=~s/([0-9]+(\.[0-9]+)?)([\+\-])([0-9]+(\.[0-9]+)?)/$resultado/;    
   }
+
   return $expresion;
 }
 
@@ -60,12 +61,17 @@ sub operacion{
 
   if ($operador eq "+"){
     $resultado=$numero1+$numero2;
-  } elsif($operador eq "-"){
+  }elsif($operador eq "-"){
     $resultado=$numero1-$numero2;
-  } elsif($operador eq "*"){
+  }elsif($operador eq "*"){
     $resultado=$numero1*$numero2;
   }elsif ($operador eq "/"){
-    $resultado=$numero1/$numero2;
+    if ($numero2==0){
+      $resultado="No se puede dividir por 0";
+    }
+    else{
+      $resultado=$numero1/$numero2;
+    }
   }
   return $resultado;
 }
