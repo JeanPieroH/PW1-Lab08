@@ -19,7 +19,10 @@ print <<BLOCK;
   <body>
     <h1>Calculadora</h1>
     <form action="../index.html">
-      <p>Resultado: $resultado</p>
+      <p>Calcular:</p>
+      <p>$expresion</p>
+      <p>Resultado:</p>
+      <p>$resultado</p>
       <p><input type="submit" value="Regresar"></p>
     </form>
   </body>
@@ -29,7 +32,15 @@ BLOCK
 sub evaluarExpresion{
   my $expresion=$_[0];
 
-  while (not $expresion=~/^[0-9]+(\.[0-9]+)?$/ and not $expresion=~/No se puede dividir por 0/){
+  while (not $expresion=~/^[0-9]+(\.[0-9]+)?$/){
+    if($expresion=~/No ingreso una expresion valida/){
+      $expresion="No ingreso una expresion valida";
+      last;
+    }
+    if($expresion=~/No se puede dividir por 0/){
+      $expresion="No se puede dividir por 0";
+      last;
+    }
     $expresion=evaluarOperacion($expresion);
   }
 
@@ -40,13 +51,35 @@ sub evaluarOperacion{
   my $expresion=$_[0];
   my $resultado;
   
-  if ($expresion=~/([0-9]+(\.[0-9]+)?)([\*\/])([0-9]+(\.[0-9]+)?)/){
+  if($expresion=~/\((.+)\)/){
+    $resultado=evaluarExpresion($1);
+    if ($resultado=~/^[0-9]+(\.[0-9]+)?/){
+      if ($expresion=~/([0-9]+(\.[0-9]+)?)\(.+\)/){
+        $resultado=operacion($1,"*",$resultado);
+        $expresion=~s/([0-9]+(\.[0-9]+)?)\(.+\)/($resultado)/;
+      }
+      elsif($expresion=~/\(.+\)([0-9]+(\.[0-9]+)?)/){
+        $resultado=operacion($resultado,"*",$1);
+        $expresion=~s/\(.+\)([0-9]+(\.[0-9]+)?)/($resultado)/;
+      }
+      else{
+        $expresion=~s/\((.+)\)/$resultado/;
+      }
+    }
+    else{
+     $expresion=~s/\((.+)\)/$resultado/;
+    }
+  }
+  elsif ($expresion=~/([0-9]+(\.[0-9]+)?)([\*\/])([0-9]+(\.[0-9]+)?)/){
     $resultado=operacion($1,$3,$4);
     $expresion=~s/([0-9]+(\.[0-9]+)?)([\*\/])([0-9]+(\.[0-9]+)?)/$resultado/;    
   } 
   elsif ($expresion=~/([0-9]+(\.[0-9]+)?)([\+\-])([0-9]+(\.[0-9]+)?)/){
     $resultado=operacion($1,$3,$4);
     $expresion=~s/([0-9]+(\.[0-9]+)?)([\+\-])([0-9]+(\.[0-9]+)?)/$resultado/;    
+  }
+  else{
+    $expresion="No ingreso una expresion valida";
   }
 
   return $expresion;
