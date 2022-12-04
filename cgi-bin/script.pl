@@ -19,7 +19,7 @@ print <<BLOCK;
     <link rel="stylesheet" href="../css/style.css"> 
  </head>
 
-  <body class="main">
+  <body>
     <div class="card">
       <h1 class="header">Calculadora</h1>
       <form action="../index.html">
@@ -32,6 +32,10 @@ print <<BLOCK;
         </div>
       </form>
     </div>
+    <footer>
+      <p>Grupo 2</p>
+      <p>UNSA-2022</p>
+    </footer>
   </body>
 </html>
 BLOCK

@@ -2,14 +2,26 @@
   box-sizing: border-box;
   font-family: "Montserrat","sans-serif";
 }
+html{
+  height:96%;
+}
 body{
   background-color:#004f92;
+  min-height:100%;
+  display: grid;
+  grid-template-areas:
+  "main"
+  "footer";
+  grid-template-rows: auto 100px;
+
+  
 }
 .card{
+  grid-area:main;
   width: 55%;
-  height: 500px;
   margin:0 auto;
-  margin-top: 50px;
+  margin-top:50px;
+  margin-bottom:20px;
   display: flex;
   flex-direction:column;
   justify-content:center;
@@ -20,7 +32,7 @@ body{
 }
 .header{
   display: flex;
-  padding-top:10%;
+  padding-top:8%;
   font-size:50px;
   flex-direction: column;
   align-items: center;
@@ -35,15 +47,15 @@ body{
   display: flex;
   justify-content: center;
   align-items:center;
-  border
+  border-radius:10px;
 }
 .texto{
   text-align:center;
   font-size:18px;
-  font-weight:bold;
+  font-weight: bold;
 }
 .resultado{
-  font-weight:normal;
+  color:#004f92;
 }
 .cajaTexto{
   width: 250px;
@@ -85,8 +97,13 @@ body{
 .boton:hover{
   box-shadow:0 1px 6px #20212447;
   width: 153px;
-  height: 39px;
   font-size: 26px:
-
 }
-
+footer{
+  grid-area:footer;
+}
+footer p{
+  margin-top:20px;
+  text-align:center;
+  color:white;
+}
